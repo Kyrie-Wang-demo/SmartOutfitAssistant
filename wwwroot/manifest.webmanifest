@@ -1,0 +1,14 @@
+﻿{
+  "name": "智能穿搭助手",
+  "short_name": "穿搭助手",
+  "description": "基于心情、天气、场景和个人衣柜的智能穿搭推荐 App",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbf7f0",
+  "theme_color": "#d98272",
+  "orientation": "portrait-primary",
+  "lang": "zh-CN",
+  "categories": ["lifestyle", "productivity"],
+  "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
