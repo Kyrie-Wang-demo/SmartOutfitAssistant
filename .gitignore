@@ -1,0 +1,16 @@
+﻿bin/
+obj/
+.vs/
+publish/
+tools/
+*.log
+PUBLIC_URL.txt
+App_Data/*.json
+App_Data/*.bak
+!App_Data/.gitkeep
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
+wwwroot/generated/reference-images/*
+!wwwroot/generated/reference-images/.gitkeep
+*.user
+*.suo
