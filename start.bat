@@ -1,0 +1,3 @@
+@echo off
+echo Starting Smart Outfit Assistant...
+dotnet run --urls http://localhost:5187
