@@ -1,0 +1,112 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>智能穿搭助手</title>
+  <meta name="description" content="基于心情、天气、场景和个人衣柜的智能穿搭推荐 App" />
+  <meta name="theme-color" content="#d98272" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="穿搭助手" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/icon.svg" />
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+  <div class="ambient a"></div><div class="ambient b"></div>
+  <header class="shell hero" id="top">
+    <nav class="topbar">
+      <a class="brand" href="#top"><span class="brand-mark">✦</span><span>智能穿搭助手</span></a>
+      <div class="nav-links">
+        <a href="#recommend">搭配</a><a href="#wardrobe">衣柜</a><a href="#history">历史</a><a href="#settings">设置</a>
+        <button id="installApp" class="install-btn" type="button" hidden>安装App</button>
+      </div>
+    </nav>
+    <section class="hero-grid">
+      <div>
+        <p class="eyebrow">Publish-ready · Local-first · PWA</p>
+        <h1>让衣柜、天气和心情，一起决定今天怎么穿。</h1>
+        <p class="hero-text">本地保存衣柜与历史，联网仅用于“缺少单品”的参考图搜索。可安装为桌面/手机 App，适合日常长期使用。</p>
+        <div class="hero-actions"><a class="btn primary" href="#recommend">开始推荐</a><a class="btn ghost" href="#wardrobe">录入衣柜</a></div>
+      </div>
+      <aside class="glass hero-card">
+        <div class="score-ring"><span id="wardrobeCountHero">0</span><small>衣柜单品</small></div>
+        <h2 id="todayTitle">准备好你的今日穿搭</h2>
+        <p id="todaySummary">录入衣柜后推荐会优先使用你已有衣物。</p>
+        <div id="todayChips" class="chip-row"><span class="chip">PWA App</span><span class="chip">本地数据</span><span class="chip">联网参考图</span></div>
+      </aside>
+    </section>
+  </header>
+
+  <main class="shell layout">
+    <section class="panel dashboard" aria-label="数据概览">
+      <div class="metric"><strong id="metricWardrobe">0</strong><span>衣柜单品</span></div>
+      <div class="metric"><strong id="metricFav">0</strong><span>收藏衣物</span></div>
+      <div class="metric"><strong id="metricHistory">0</strong><span>搭配历史</span></div>
+      <div class="metric"><strong id="metricReuse">0</strong><span>衣柜复用件次</span></div>
+    </section>
+
+    <section id="recommend" class="panel">
+      <div class="section-heading"><div><p class="eyebrow">Recommendation</p><h2>生成今日搭配</h2></div><span class="soft-badge">规则引擎 + 衣柜优先 + 联网找图</span></div>
+      <form id="recommendForm" class="form-grid">
+        <div class="field full"><label>当前心情</label><div class="mood-grid" id="moodButtons"><button type="button" class="mood active" data-mood="开心">😊 开心</button><button type="button" class="mood" data-mood="忧郁">🌧 忧郁</button><button type="button" class="mood" data-mood="活力">⚡ 活力</button><button type="button" class="mood" data-mood="慵懒">☁ 慵懒</button><button type="button" class="mood" data-mood="正式">💼 正式</button><button type="button" class="mood" data-mood="浪漫">🌷 浪漫</button></div></div>
+        <div class="field"><label for="customMood">自定义心情</label><input id="customMood" placeholder="如：答辩前紧张、周末松弛" /></div>
+        <div class="field"><label for="occasion">场景</label><select id="occasion"><option>日常</option><option>通勤</option><option>会议</option><option>面试</option><option>约会</option><option>旅行</option><option>运动</option><option>聚会</option></select></div>
+        <div class="field"><label for="fitPreference">版型偏好</label><select id="fitPreference"><option>舒适</option><option>修身</option><option>宽松</option><option>利落</option><option>显高</option></select></div>
+        <div class="field"><label for="temperature">温度 ℃</label><input id="temperature" type="number" min="-30" max="50" value="22" /></div>
+        <div class="field"><label for="condition">天气</label><select id="condition"><option>晴</option><option>多云</option><option>阴</option><option>小雨</option><option>大雨</option><option>雪</option><option>晒</option></select></div>
+        <div class="field"><label for="windLevel">风力</label><input id="windLevel" type="number" min="0" max="12" value="2" /></div>
+        <div class="field"><label for="humidity">湿度 %</label><input id="humidity" type="number" min="0" max="100" value="50" /></div>
+        <div class="field toggle-line"><input id="preferWardrobe" type="checkbox" checked /><label for="preferWardrobe">优先使用我的衣柜</label></div>
+        <div class="field full actions-row"><button class="btn primary" type="submit">生成搭配</button><button class="btn subtle" type="button" id="fillRainy">雨天示例</button><button class="btn subtle" type="button" id="fillCold">低温示例</button></div>
+      </form>
+      <div id="result" class="result empty-state">生成后将在这里展示完整搭配、图片、理由、天气调整与购买建议。</div>
+    </section>
+
+    <section id="wardrobe" class="panel">
+      <div class="section-heading"><div><p class="eyebrow">Wardrobe</p><h2>我的衣柜</h2></div><div class="toolbar"><input id="wardrobeSearch" placeholder="搜索衣物/颜色/标签" /><select id="wardrobeFilter"><option value="">全部类别</option><option>上衣</option><option>下装</option><option>外套</option><option>鞋子</option><option>配饰</option></select></div></div>
+      <div class="wardrobe-layout">
+        <form id="uploadForm" class="upload-card">
+          <label class="drop-zone" for="photos"><input id="photos" name="photos" type="file" accept="image/*" multiple /><span class="upload-icon">＋</span><strong>上传/拍照录入衣物</strong><small>支持多图；会尝试提取主色，可手动修改。</small></label>
+          <div id="preview" class="preview"></div>
+          <div class="form-grid compact">
+            <div class="field"><label>名称</label><input id="itemName" placeholder="蓝色牛仔衬衫" /></div>
+            <div class="field"><label>种类</label><select id="itemCategory"><option>上衣</option><option>下装</option><option>外套</option><option>鞋子</option><option>配饰</option></select></div>
+            <div class="field"><label>颜色</label><input id="itemColor" required placeholder="雾霾蓝 / #8aa8c1" /></div>
+            <div class="field"><label>材质</label><input id="itemMaterial" placeholder="棉 / 羊毛 / 防水" /></div>
+            <div class="field"><label>季节</label><select id="itemSeason"><option>四季</option><option>春秋</option><option>夏季</option><option>冬季</option></select></div>
+            <div class="field"><label>场景</label><input id="itemOccasion" placeholder="日常 / 通勤 / 约会" /></div>
+            <div class="field full"><label>标签</label><input id="itemTags" placeholder="基础款, 显瘦, 防水" /></div>
+            <div class="field full"><label>备注</label><input id="itemNotes" placeholder="适合搭配白裤子" /></div>
+            <div class="field toggle-line full"><input id="itemFavorite" type="checkbox" /><label for="itemFavorite">收藏这件衣物</label></div>
+          </div>
+          <button class="btn primary full-width" type="submit">保存到衣柜</button>
+        </form>
+        <div><div id="wardrobeGrid" class="card-grid"></div><div id="wardrobeEmpty" class="empty-state">还没有衣物。先上传几张常穿单品。</div></div>
+      </div>
+    </section>
+
+    <section id="history" class="panel">
+      <div class="section-heading"><div><p class="eyebrow">History</p><h2>搭配历史</h2></div><div class="toolbar"><button class="btn subtle" id="exportData" type="button">导出数据</button><button class="btn subtle" id="clearHistory" type="button">清空历史</button></div></div>
+      <div id="historyList" class="history-list"></div><div id="historyEmpty" class="empty-state">暂无历史记录。</div>
+    </section>
+
+    <section id="settings" class="panel">
+      <div class="section-heading"><div><p class="eyebrow">Settings</p><h2>个性化与发布设置</h2></div><span class="soft-badge" id="onlineState">检测网络中</span></div>
+      <form id="settingsForm" class="form-grid">
+        <div class="field"><label>昵称</label><input id="setDisplayName" /></div><div class="field"><label>默认场景</label><input id="setDefaultOccasion" /></div>
+        <div class="field"><label>风格偏好</label><input id="setStylePreference" /></div><div class="field"><label>版型偏好</label><input id="setFitPreference" /></div>
+        <div class="field"><label>偏好色（逗号分隔）</label><input id="setPreferredColors" /></div><div class="field"><label>避雷色（逗号分隔）</label><input id="setAvoidColors" /></div>
+        <div class="field toggle-line"><input id="setOnlineImages" type="checkbox" /><label for="setOnlineImages">缺少单品时联网找图</label></div>
+        <div class="field toggle-line"><input id="setPreferWardrobe" type="checkbox" /><label for="setPreferWardrobe">默认优先使用衣柜</label></div>
+        <div class="field full actions-row"><button class="btn primary" type="submit">保存设置</button><button class="btn ghost" type="button" id="refreshAll">刷新全部数据</button></div>
+      </form>
+    </section>
+  </main>
+
+  <dialog id="editDialog" class="dialog"><form method="dialog" id="editForm"><h3>编辑衣物</h3><input type="hidden" id="editId" /><div class="form-grid compact"><div class="field"><label>名称</label><input id="editName" /></div><div class="field"><label>种类</label><input id="editCategory" /></div><div class="field"><label>颜色</label><input id="editColor" /></div><div class="field"><label>材质</label><input id="editMaterial" /></div><div class="field"><label>季节</label><input id="editSeason" /></div><div class="field"><label>场景</label><input id="editOccasion" /></div><div class="field full"><label>标签</label><input id="editTags" /></div><div class="field full"><label>备注</label><input id="editNotes" /></div><div class="field toggle-line full"><input id="editFavorite" type="checkbox" /><label>收藏</label></div></div><div class="actions-row"><button class="btn primary" value="save">保存</button><button class="btn subtle" value="cancel">取消</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/js/app.js"></script>
+</body>
+</html>
