@@ -1,0 +1,23 @@
+﻿name: .NET CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore
+        run: dotnet restore ConsoleApp2.csproj
+      - name: Build
+        run: dotnet build ConsoleApp2.csproj -c Release --no-restore
+      - name: Publish
+        run: dotnet publish ConsoleApp2.csproj -c Release -o publish --no-build
