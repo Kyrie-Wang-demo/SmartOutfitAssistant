@@ -1,0 +1,3 @@
+@echo off
+echo Starting Smart Outfit Assistant for LAN...
+dotnet run --project "%~dp0ConsoleApp2.csproj" --urls http://0.0.0.0:5187
